@@ -34,15 +34,22 @@ def Tweet():
 
     
 
-    for x in hashTags[0]:
-        if x[0] != '#':  
-            if today.weekday() == 4 and today.day == 13:
-                api.update_status("Is it Friday the 13th Today?\nYes \n\n\n{hashtag}".format(hashtag = x))
-                print("Tweet Sent")
+    for x in hashTags[0:5]:
+
+        if x[0] != '#':
+            index = hashTags.index(x)  
+            x = '#' + x
+            hashTags[index] = x
+        x.replace(' ', '')
+            
+    print(hashTags[0:5])
+    if today.weekday() == 4 and today.day == 13:
+        api.update_status("Is it Friday the 13th Today?\nYes \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
+        print("Tweet Sent")
                 
-            else:
-                api.update_status("Is it Friday the 13th Today?\nNo \n\n\n{hashtag}".format(hashtag = x))
-                print("Tweet Sent")
+    else:
+        api.update_status("Is it Friday the 13th Today?\nNo \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
+        print("Tweet Sent")
         
 
 #schedule.every(5).seconds.do(Tweet)
