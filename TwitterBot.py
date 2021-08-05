@@ -35,12 +35,11 @@ def Tweet():
     
 
     for x in hashTags[0:5]:
-
         if x[0] != '#':
             index = hashTags.index(x)  
             x = '#' + x
             hashTags[index] = x
-        x.replace(' ', '')
+        x = ''.join(x.split(' '))
             
     print(hashTags[0:5])
     if today.weekday() == 4 and today.day == 13:
