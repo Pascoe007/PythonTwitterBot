@@ -32,14 +32,13 @@ def Tweet():
     today = datetime.datetime.now()
     todaystr = today.strftime("%H:%M:%S")    
 
-    
-
     for x in hashTags[0:5]:
         if x[0] != '#':
             index = hashTags.index(x)  
             x = '#' + x
             hashTags[index] = x
-        x = ''.join(x.split(' '))
+        index = hashTags.index(x) 
+        hashTags[index] = ''.join(x.split(' '))
             
     print(hashTags[0:5])
     if today.weekday() == 4 and today.day == 13:
