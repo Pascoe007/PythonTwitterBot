@@ -17,7 +17,7 @@ woeid = 23424975
 auth = tw.OAuthHandler(APIKey, APISKey)
 auth.set_access_token(accessToken, accessTokenSecret)
 
-api = tw.API(auth)
+api = tw.API(auth, wait_on_rate_limit=True)
 
 
 def Tweet():
@@ -41,20 +41,33 @@ def Tweet():
         hashTags[index] = ''.join(x.split(' '))
             
     print(hashTags[0:5])
-    if today.weekday() == 4 and today.day == 13:
-        api.update_status("Is it Friday the 13th Today?\nYes \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
-        print("Tweet Sent")
-                
-    else:
-        api.update_status("Is it Friday the 13th Today?\nNo \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
-        print("Tweet Sent")
+    try:
+        if today.weekday() == 4 and today.day == 13:
+            api.update_status("Is it Friday the 13th Today?\nYes \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
+            print("Tweet Sent", datetime.datetime.now().time())
+        else:
+                api.update_status("Is it Friday the 13th Today?\nNo \n\n\n{hashtag}".format(hashtag = ' '.join(hashTags[0:5])))
+                print("Tweet Sent", datetime.datetime.now().time())   
+    except tw.TweepError as e:
+        print(e.args[0][0]['code'])
+        print(e.args[0][0]['message'])
+        time.sleep(900)
+        print("Tweet Sent", datetime.datetime.now().time())      
+        #schedule.every().day.at(str(hour.strftime("%H:%M"))).do(Tweet)      
+        #Tweet()
+
         
 
-#schedule.every(5).seconds.do(Tweet)
+#schedule.every(1).seconds.do(Tweet)
 schedule.every().day.at("15:00").do(Tweet)
 
 while True:
-    schedule.run_pending()
+    try:
+        schedule.run_pending()
+    except tw.TweepError as e:
+        print(e.args[0][0]['message'])
+        time.sleep(10)
+        continue
     time.sleep(1)
 
     
